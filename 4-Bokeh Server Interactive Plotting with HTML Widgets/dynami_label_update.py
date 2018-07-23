@@ -10,6 +10,7 @@ from bokeh.layouts import layout
 source_original = ColumnDataSource(dict(average_grades=[7, 8, 10],
                                         exam_grades=[6, 9, 8],
                                         student_names=["Stephan", "Helder", "Riazudidn"]))
+
 source = ColumnDataSource(dict(average_grades=[7, 8, 10],
                                exam_grades=[6, 9, 8],
                                student_names=["Stephan", "Helder", "Riazudidn"]))
@@ -41,13 +42,20 @@ def radio_update_labels(attr, old, new):
 
 # Create on slider change function
 def filter_grades(attr, old, new):
-    source.data = {
-        key: [
-            value for i, value in enumerate(source_original.data[key])
-            if source_original.data['exam_grades'][i] >= slider.value
-        ]
-        for key in source_original.data
-    }
+    for key in source_original.data:
+        source.data[key] = []
+        for (i, value) in enumerate(source_original.data[key]):
+            if source_original.data['exam_grades'][i] >= slider.value:
+                source.data[key] += [value]
+
+    # Below is a more elaborate method
+    # source.data = {
+    #     key: [
+    #         value for i, value in enumerate(source_original.data[key])
+    #         if source_original.data['exam_grades'][i] >= slider.value
+    #     ]
+    #     for key in source_original.data
+    # }
 
     print(source.data)
 
@@ -65,8 +73,8 @@ radio_button_group.on_change("active", radio_update_labels)
 
 # Slider Widget
 slider = Slider(
-    start=min(source_original.data['exam_grades'])-1,
-    end=max(source_original.data["exam_grades"])+1,
+    start=min(source_original.data['exam_grades']) - 1,
+    end=max(source_original.data["exam_grades"]) + 1,
     value=8,
     step=0.1,
     title="Exam Grade: "
