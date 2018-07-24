@@ -48,7 +48,7 @@ def filter_grades(attr, old, new):
             if source_original.data['exam_grades'][i] >= slider.value:
                 source.data[key] += [value]
 
-    # Below is a more elaborate method
+    # Below is a more elaborate technique
     # source.data = {
     #     key: [
     #         value for i, value in enumerate(source_original.data[key])
